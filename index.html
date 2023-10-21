@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>coin flip</title>
+
+        <style>
+            .image{
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+                cursor: pointer;
+            }
+
+            .button{
+                padding: 10px 20px;
+                background-color: gold;
+                border: none;
+                cursor: pointer;
+            }
+
+         
+        </style>
+    </head>
+
+
+    <body>
+        <img src="images/head.png" class="image js-guess-head">
+        <img src="images/tail.png" class="image js-guess-tail"> 
+
+
+        <p class="js-result"></p>
+        <p class="js-moves"></p>
+        <p class="js-score"></p>
+        
+
+        <button class="button js-button"> Reset Score</button>
+        
+
+        <script>
+            const score = JSON.parse(localStorage.getItem('score')) || {
+                wins: 0,
+                losses: 0
+            };
+        
+            
+
+            function playGame(guess){
+            const randomNumber = Math.random();
+            let result;
+
+            //const result = randomNumber < 0.5 ? 'heads':'tails';
+            
+
+            if( randomNumber < 0.5){  
+                result = 'head';
+
+            }else{
+                result = 'tail';
+            }
+
+             //console.log(guess === result ? 'you win' : 'you lose');
+            if( guess === result){
+                score.wins++;
+            }else{
+                score.losses++;
+            }
+
+            if(guess === result){
+                results = 'You win!';
+            }else{
+                results = 'You lose!';
+            }
+
+            localStorage.setItem('score', JSON.stringify(score));
+
+            updateScore();
+
+            document.querySelector('.js-result').innerHTML = results;
+
+            document.querySelector('.js-moves').innerHTML = `You choose ${guess}`;
+
+            }
+
+            function updateScore(){
+                document.querySelector('.js-score').innerHTML = `wins: ${score.wins}, losses: ${score.losses}`;
+
+            }
+
+            document.querySelector('.js-guess-head')
+            .addEventListener('click',()=>{
+                playGame('head');
+            });
+
+            document.querySelector('.js-guess-tail')
+            .addEventListener('click',()=>{
+                playGame('tail');
+            });
+
+            document.querySelector('.js-button')
+            .addEventListener('click',()=>{
+                score.wins = 0;
+                score.losses = 0;
+                score.ties = 0;
+                localStorage.removeItem('score');
+
+                updateScore();
+
+                document.querySelector('.js-result').innerHTML = '';
+                document.querySelector('.js-moves').innerHTML = '';
+
+            });
+
+            document.body.addEventListener('keydown', (event)=>{
+            if(event.key === 'h'){
+                playGame('head');
+
+            }else if(event.key ==='t'){
+                playGame('tail');
+            
+            }});
+
+
+        </script>
+    </body>
+</html>
